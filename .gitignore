@@ -1,0 +1,9 @@
+venv
+.DS_Store
+notes.md
+__pycache__
+dist
+MANIFEST
+config.json
+setup.cfg
+sorcerer.egg-info
