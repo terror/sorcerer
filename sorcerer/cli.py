@@ -5,13 +5,13 @@ from .generator import Generator
 
 
 @click.command()
-@click.option('--git', prompt='Github link to repository')
-@click.option('--local_path', prompt='Local path to repository')
+@click.option("--git", prompt="Github link to repository")
+@click.option("--local_path", prompt="Local path to repository")
 def cli(git, local_path):
     # Load json config
     CONFIG = {}
-    if os.path.exists('{}/config.json'.format(local_path)):
-        with open('{}/config.json'.format(local_path)) as f:
+    if os.path.exists("{}/config.json".format(local_path)):
+        with open("{}/config.json".format(local_path)) as f:
             try:
                 CONFIG = json.load(f)
             except Exception as e:
@@ -25,5 +25,5 @@ def cli(git, local_path):
     generator.generate()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

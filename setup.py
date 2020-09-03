@@ -1,8 +1,9 @@
 from setuptools import find_packages
 
 from os import path
+
 this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 
@@ -16,7 +17,7 @@ def setup_package():
         author_email="liamscalzulli@gmail.com",
         description="Programming problem solution README table generator",
         long_description=long_description,
-        long_description_content_type='text/markdown',
+        long_description_content_type="text/markdown",
         keywords="programming competitive tables markdown readmes",
         url="https://github.com/terror/sorcerer",
         project_urls={

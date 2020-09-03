@@ -4,5 +4,5 @@ sites = {
     "cses": "https://cses.fi/problemset/task",
     "codeforces": "https://codeforces.com/problemset/problem",
     "project euler": "https://projecteuler.net/problem=",
-    "dmoj": "https://dmoj.ca/problem"
+    "dmoj": "https://dmoj.ca/problem",
 }

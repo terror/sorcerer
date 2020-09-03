@@ -1,5 +1,6 @@
 # sorcerer :crystal_ball:
-[![Build Status](https://travis-ci.com/terror/sorcerer.svg?branch=master)](https://travis-ci.com/terror/sorcerer)  
+[![Build Status](https://travis-ci.com/terror/sorcerer.svg?branch=master)](https://travis-ci.com/terror/sorcerer)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)  
 Programming problem solution README table generator
 
 # Installation
@@ -34,7 +35,7 @@ This will then look for a `config.json` file that looks something like this
 `sorcerer` as of now, requires a specific file structure in order to work.
 
 ```
-Github/lazy/example/
+Github/sorcerer/example/
 ├── SITE_NAME
 │   └── PROBLEM_ID
 │       └── solution.cpp
@@ -66,8 +67,8 @@ Potential sample result for a folder in the sample file structure above.
  [Gerrymandering](https://open.kattis.com/problems/gerrymandering) | [Python](https://github.com/terror/sorcerer/blob/master/example/Kattis/gerrymandering/solution.py)
  [Fenwick](https://open.kattis.com/problems/fenwick) | [C++](https://github.com/terror/sorcerer/blob/master/example/Kattis/fenwick/solution.cpp), [Python](https://github.com/terror/sorcerer/blob/master/example/Kattis/fenwick/solution.py)
 
-
-The current sites being supported can be found [here](https://github.com/terror/sorcerer/blob/master/constants/sites.py). A full sample repository can be found [here](https://github.com/terror/sorcerer/tree/master/example) 
+The current sites being supported can be found [here](https://github.com/terror/sorcerer/blob/master/sorcerer/constants/sites.py).   
+A full sample repository can be found [here](https://github.com/terror/sorcerer/tree/master/example)   
 
 # Development
 Fork the repository
@@ -80,6 +81,5 @@ $ pip3 install -r requirements.txt
 ```
 $ python3 sorcerer
 ```
-
 # License
 MIT

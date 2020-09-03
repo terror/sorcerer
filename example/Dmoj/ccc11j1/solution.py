@@ -1,5 +1,12 @@
-n, m, d = int(input()), int(input()), {"TroyMartian": [3, -4, 0, 0], "VladSaturnian": [-6, 2, 0, 0],
-                                       "GraemeMercurian": [-2, -3, 0, 0]}
+n, m, d = (
+    int(input()),
+    int(input()),
+    {
+        "TroyMartian": [3, -4, 0, 0],
+        "VladSaturnian": [-6, 2, 0, 0],
+        "GraemeMercurian": [-2, -3, 0, 0],
+    },
+)
 
 for i in range(2):
     curr = n if i == 0 else m

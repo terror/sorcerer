@@ -12,5 +12,5 @@ languages = {
     ".ml": "OCaml",
     ".php": "PHP",
     ".rb": "Ruby",
-    ".m": "Objective C"
+    ".m": "Objective C",
 }
