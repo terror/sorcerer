@@ -1,127 +1,129 @@
 import click
 import os
-from pathlib import Path
-from .constants import sites, languages
-from .utils import list_tolower
+from collections import defaultdict
+from constants import sites, languages
 
 
 class Generator:
-    def __init__(self, PATH, GIT, CONFIG):
-        self.PATH = PATH
-        self.GIT = GIT
-        self.CONFIG = CONFIG
+    """
+    Responsible for generating the markdown tables
+
+    :param git: User's github username
+    :param config: User's config file
+    """
+
+    def __init__(self, git, config):
+        self.git = git
+        self.config = config
 
     def generate(self):
-        i, CURR_PROBLEM, CURR_SITE = 0, "", ""
-        for subdir, dirs, files in os.walk(self.PATH, topdown=True):
-            # Exclude ignored directories
-            dirs[:] = self.exclude_dirs(subdir, dirs)
+        """
+        Generates the markdown tables with
+        respect to the user's config file
+        """
 
-            # Create READMEs
-            for d in dirs:
-                if d.lower() in list_tolower(self.CONFIG["Paths"]):
-                    try:
-                        self.create_readme(os.path.join(subdir, d))
-                    except Exception as err:
-                        print("Error trying to create READMEs.", err)
+        # Get all directories in config file
+        directories = self.config["Paths"]
 
-            for file in files:
-                if self.check_subdir(subdir):
-                    PATH = os.path.join(subdir, file)
-                    # Check if at a solution file
-                    if os.path.split(os.path.split(PATH)[0])[
-                        1
-                    ].lower() not in list_tolower(self.CONFIG["Paths"]):
-                        filename, file_extension = os.path.splitext(PATH)
-                        problem_name = os.path.split(
-                            os.path.split(PATH)[0])[1].lower()
-                        file_dir = os.path.dirname(subdir)
-                        site_name = os.path.basename(file_dir).lower()
-                        path_parts = Path(PATH).parts
-                        git_path = (
-                            self.GIT
-                            + "/blob/master/"
-                            + os.path.join(
-                                *path_parts[
-                                    len(path_parts)
-                                    - path_parts.index(
-                                        os.path.basename(
-                                            os.path.normpath(self.PATH))
-                                    )
-                                    + 1:
-                                ]
+        # Github link to the repository
+        git_link = "https://github.com/{}/{}/".format(
+            self.git, os.path.basename(os.getcwd())
+        )
+
+        # Walk through directories
+        for directory in directories:
+            table, site = defaultdict(list), directory
+
+            try:
+                self.create_readme(directory, site)
+            except Exception as error:
+                print("Error: {}".format(error))
+
+            self.populate_map(directory, table)
+
+            # Build the README table
+            with open(os.path.join(directory, "README.md"), "a") as readme:
+                for file, file_extensions in table.items():
+                    if len(file_extensions) == 1:
+                        readme.write(
+                            "[{}]({}/{}) | [{}]({})\n".format(
+                                file.capitalize(),
+                                sites[site.lower()],
+                                file,
+                                languages[file_extensions[0]],
+                                self.git_file_path(
+                                    git_link, directory, file +
+                                    file_extensions[0]
+                                ),
+                            )
+                        )
+                    else:
+                        readme.write(
+                            "[{}]({}/{}) | ".format(
+                                file.capitalize(), sites[site.lower()], file
                             )
                         )
 
-                        if CURR_SITE != site_name:
-                            i = 0
-
-                        if site_name not in sites:
-                            print("Invalid folder name.\n Exiting...")
-                            exit()
-
-                        if CURR_PROBLEM != problem_name:
-                            print(
-                                "[~] Creating table entry for: {}/{}...".format(
-                                    site_name, problem_name
-                                )
-                            )
-                            readme = open("{}/README.md".format(file_dir), "a")
-                            if i > 0:
-                                readme.write("\n")
+                        for index, extension in enumerate(file_extensions):
                             readme.write(
-                                " [{}]({}/{}) | [{}]({})".format(
-                                    problem_name.capitalize(),
-                                    sites[site_name],
-                                    problem_name,
-                                    languages[file_extension],
-                                    git_path,
+                                "[{}]({}){} ".format(
+                                    languages[extension],
+                                    self.git_file_path(
+                                        git_link, directory, file + extension
+                                    ),
+                                    "," if index != len(
+                                        file_extensions) - 1 else "\n",
                                 )
                             )
-                        else:
-                            print(
-                                "[~] Appending to existing table entry for {}/{}".format(
-                                    site_name, problem_name
-                                )
-                            )
-                            readme = open("{}/README.md".format(file_dir), "a")
-                            readme.write(
-                                ", [{}]({}) ".format(
-                                    languages[file_extension], git_path
-                                ).rstrip()
-                            )
 
-                        CURR_PROBLEM, CURR_SITE = problem_name, site_name
-                        i += 1
-                        readme.close()
+                readme.close()
 
-        click.secho("Process finished!", bold=True)
+        click.secho("Process finished!", fg="green")
 
-    def exclude_dirs(self, subdir, dirs):
-        self.CONFIG["Ignore"], self.CONFIG["Paths"] = (
-            list_tolower(self.CONFIG["Ignore"]),
-            list_tolower(self.CONFIG["Paths"]),
-        )
-        return [
-            d
-            for d in dirs
-            if d.lower() in self.CONFIG["Paths"]
-            and d.lower() not in self.CONFIG["Ignore"]
-            or self.check_subdir(subdir)
-        ]
+    def create_readme(self, path, site):
+        """
+        Creates README file for specified path
 
-    def check_subdir(self, subdir):
-        subdir = subdir.lower()
-        for i in list_tolower(self.CONFIG["Paths"]):
-            if i in subdir:
-                return True
-        return False
+        :param path: path for the README file
+        """
+        site = site.capitalize()
 
-    def create_readme(self, path):
-        title = os.path.basename(path)
-        print("[~] Creating README for {}...".format(title))
-        with open(os.path.join(path, "README.md"), "w") as f:
-            f.write("# {}\n".format(title))
-            f.write("| Problem | Languages |\n")
-            f.write("| ------- | --------- |\n")
-            f.close()
+        print("[~] Creating README for {}...".format(site))
+
+        with open(os.path.join(path, "README.md"), "w") as readme:
+            readme.write(
+                "# {}\n| Problem | Languages |\n| ------- | --------- |\n".format(
+                    site)
+            )
+
+            readme.close()
+
+    def populate_map(self, directory, table):
+        """
+        Populate map with file : [extensions]
+
+        :param directory: directory to walk through
+        :param table: map to populate
+        """
+        for subdir, dirs, files in os.walk(directory):
+            for file in files:
+                filename, file_extension = os.path.splitext(file)
+
+                if file_extension not in languages:
+                    continue
+
+                table[filename].append(file_extension)
+
+    def git_file_path(self, git_link, directory, file):
+        """
+        Builds the github file path to a file in the table.
+        C++ -> [C++](github/path/to/file)
+
+        :param git_link: link to users Github repo
+        :param directory: current directory (site name)
+        :param file: solution file
+        :return: github file path
+        """
+        path = git_link + "blob/master/{}/{}".format(directory, file)
+
+        return path

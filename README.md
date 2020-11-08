@@ -1,85 +1,75 @@
-# sorcerer :crystal_ball:
+## sorcerer :crystal_ball:
 [![Build Status](https://travis-ci.com/terror/sorcerer.svg?branch=master)](https://travis-ci.com/terror/sorcerer)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)  
 Programming problem solution README table generator
 
-# Installation
+### Installation
 You can simply use pip to install sorcerer:  
 ```bash
 $ pip install sorcerer
 ```
 
-# Usage
-Run sorcerer as a command
+### Arguments
+
+`--git, -g`: github username (required)
+
+### Usage
+Run sorcerer as a command in your solutions directory
 ```bash
-$ sorcerer
+$ sorcerer -g [github username]
 ```  
-This will prompt you for your github repository link and absolute path to the repository.
 
-## Example
-```bash
-Github link to repository: https://github.com/sorcerer/example
-Local path to repository: /Absolute/path/to/repository
-```
-
-This will then look for a `config.json` file that looks something like this
+This will then look for a `config.json` file that looks like this: 
 
 ```JSON
 {
-"Ignore": ["CSES"],
 "Paths": ["Kattis", "Dmoj", "Leetcode"]
 }
 ```
 
-## File Structure
+### File Structure
 `sorcerer` as of now, requires a specific file structure in order to work.
 
 ```
-Github/sorcerer/example/
-├── SITE_NAME
-│   └── PROBLEM_ID
-│       └── solution.cpp
-├── SITE_NAME
-│   ├── PROBLEM_ID
-│   │   └── solution.cpp
-│   └── PROBLEM_ID
-│       └── solution.py
-├── SITE_NAME
-│   ├── PROBLEM_ID
-│   │   ├── solution.cpp
-│   │   └── solution.py
-│   └── PROBLEM_ID
-│       └── solution.py
+example/
+├── CSES
+│   └── weirdalgorithm.cpp
+├── Dmoj
+│   ├── README.md
+│   ├── anoisyclass.cpp
+│   └── ccc11j1.py
+├── Kattis
+│   ├── README.md
+│   ├── fenwick.cpp
+│   ├── fenwick.py
+│   └── gerrymandering.py
 ├── README.md
 └── config.json
 ```
 
-Where PROBLEM_ID is the id for the solved problem and SITE_NAME is the problem website name.  
-For instance, https://open.kattis.com/problems/opensource -> Kattis/opensource/solution
+- The folder names must be the corresponding problem website names.
+- The solution filenames must be the corresponding problem website problem IDs. 
+- The root folder name must be the name of your github repository.
 
-## Result
+### Result
 
 Potential sample result for a folder in the sample file structure above.
 
 ### Kattis
 | Problem | Languages |
 | ------- | --------- |
- [Gerrymandering](https://open.kattis.com/problems/gerrymandering) | [Python](https://github.com/terror/sorcerer/blob/master/example/Kattis/gerrymandering/solution.py)
- [Fenwick](https://open.kattis.com/problems/fenwick) | [C++](https://github.com/terror/sorcerer/blob/master/example/Kattis/fenwick/solution.cpp), [Python](https://github.com/terror/sorcerer/blob/master/example/Kattis/fenwick/solution.py)
+ [Gerrymandering](https://open.kattis.com/problems/gerrymandering) | [Python](https://github.com/terror/example/blob/master/Kattis/gerrymandering.py)
+ [Fenwick](https://open.kattis.com/problems/fenwick) | [C++](https://github.com/terror/example/blob/master/Kattis/fenwick.cpp), [Python](https://github.com/terror/example/blob/master/Kattis/fenwick.py)
 
 The current sites being supported can be found [here](https://github.com/terror/sorcerer/blob/master/sorcerer/constants/sites.py).   
-A full sample repository can be found [here](https://github.com/terror/sorcerer/tree/master/example)   
+A full sample repository can be found [here](https://github.com/terror/sorcerer_example).  
 
-# Development
+### Development
 Fork the repository
 ```bash
-$ git clone <fork>
-```
-```
+$ git clone [fork]
 $ pip3 install -r requirements.txt
-```
-```
 $ python3 sorcerer
 ```
-# License
+### License
 MIT

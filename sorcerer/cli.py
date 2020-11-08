@@ -1,28 +1,30 @@
 import click
 import json
 import os
-from .generator import Generator
+from generator import Generator
 
 
 @click.command()
-@click.option("--git", prompt="Github link to repository")
-@click.option("--local_path", prompt="Local path to repository")
-def cli(git, local_path):
-    # Load json config
-    CONFIG = {}
-    if os.path.exists("{}/config.json".format(local_path)):
-        with open("{}/config.json".format(local_path)) as f:
+@click.option("--git", "-g", required=True)
+def cli(git):
+    """
+    Entry point for the cli. Looks for config file in
+    current directory.
+
+    :param git: User's github username
+    """
+    if os.path.exists("./config.json"):
+        with open("./config.json") as file:
             try:
-                CONFIG = json.load(f)
-            except Exception as e:
-                print(e)
+                config = json.load(file)
+            except Exception as error:
+                print("Error: {}".format(error))
                 exit()
     else:
-        print("Config file not found.")
+        click.secho("Config file not found.", fg="red")
         exit()
 
-    generator = Generator(local_path, git, CONFIG)
-    generator.generate()
+    Generator(git, config).generate()
 
 
 if __name__ == "__main__":
