@@ -1,7 +1,7 @@
 import click
 import json
 import os
-from generator import Generator
+from .generator import Generator
 
 
 @click.command()

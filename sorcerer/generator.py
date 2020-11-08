@@ -1,7 +1,7 @@
 import click
 import os
 from collections import defaultdict
-from constants import sites, languages
+from .constants import sites, languages
 
 
 class Generator:

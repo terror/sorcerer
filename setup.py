@@ -10,7 +10,7 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 def setup_package():
     metadata = dict(
         name="sorcerer",
-        version="0.12",
+        version="1.0.0",
         packages=find_packages(),
         install_requires=["Click>=7.0"],
         author="Liam Scalzulli",
